@@ -1,168 +1,55 @@
-import {
-  Badge,
-  Button,
-  Card,
-  Chip,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
 import "./App.css";
 
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import EventBusyIcon from "@mui/icons-material/EventBusy";
-import EventAvailableIcon from "@mui/icons-material/EventAvailable";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CreateIcon from "@mui/icons-material/Create";
-import SearchIcon from "@mui/icons-material/Search";
-import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useEffect, useState } from "react";
+import NewDOTForm from "./components/NewDOTForm";
+import Tablet from "./layouts/Tablet";
+import DOTTable from "./components/DOTTable";
+// import dayjs from "dayjs";
 
-const tableHeaderStyle = {
-  backgroundColor: "rgba(135, 135, 135, .25)",
-  fontWeight: "bold",
-};
+import SearchIcon from "@mui/icons-material/Search";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 
 function App() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dotRecords, setDotRecords] = useState([]);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setLoading((prev) => !prev);
-  //   }, 5000);
-  // }, []);
+  useEffect(() => {
+    const fetchDots = async () => {
+      const response = await fetch("http://localhost:3000/dots");
+      const records = await response.json();
+      setDotRecords(records);
+    };
+    fetchDots();
+  }, []);
+
+  console.log(dotRecords);
+
+  const handleAddDotRecord = (record) => {
+    const newRecords = [...dotRecords, record];
+    setDotRecords(newRecords);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className="App">
-        <Card
+        <Paper
+          elevation={2}
+          square={false}
           sx={{
-            padding: "3rem 1rem .75rem",
-            // aspectRatio: "1/1.5 ",
-            backgroundColor: "#555",
-            borderRadius: "1rem",
+            minWidth: "700px",
+            padding: "2rem 1rem 1.5rem",
+            height: "fit-content",
           }}
         >
-          <Card
-            sx={{
-              // padding: "2rem 1rem rem",
-              // aspectRatio: "1/1.5 ",
-              position: "relative",
-              height: "100%",
-            }}
-          >
-            <Stack spacing={2} padding=".5rem 1rem" height="100%">
-              <Stack direction="row" justifyContent="end">
-                <Button
-                  variant="contained"
-                  startIcon={<CreateIcon />}
-                  // onClick={() => setDialogOpen(true)}
-                  onClick={() => {
-                    setDialogOpen(true);
-                    console.log("kkkk");
-                  }}
-                >
-                  New DOT
-                </Button>
-              </Stack>
-
-              {
-                // dialogOpen ? :
-              }
-
-              {dialogOpen ? (
-                <div className="overlay">
-                  <Card
-                    sx={
-                      {
-                        // padding: "1rem 2rem",
-                      }
-                    }
-                  >
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      sx={{
-                        backgroundColor: "rgba(135, 135, 135, 1)",
-                        paddingLeft: ".5rem",
-                        color: "white",
-                      }}
-                    >
-                      <Typography>Add new DOT</Typography>
-                      <IconButton
-                        onClick={() => setDialogOpen(false)}
-                        size="small"
-                        sx={{
-                          color: "white",
-                        }}
-                      >
-                        <HighlightOffIcon />
-                      </IconButton>
-                    </Stack>
-                    <Stack direction="row" spacing={2} padding="2rem 1rem 1rem">
-                      <TextField
-                        size="small"
-                        label="Truck ID"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <LocalShippingIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                        sx={{
-                          maxWidth: "15ch",
-                        }}
-                      />
-                      <DatePicker
-                        size="small"
-                        label="DOT date"
-                        slotProps={{
-                          textField: {
-                            // helperText: 'MM/DD/YYYY',
-                            size: "small",
-                            inputProps: {
-                              startAdornment: (
-                                <InputAdornment position="start">
-                                  <LocalShippingIcon />
-                                </InputAdornment>
-                              ),
-                            },
-                          },
-                        }}
-                        sx={{
-                          maxWidth: "20ch",
-                        }}
-                      />
-                      <Button variant="contained" startIcon={<AddCircleIcon />}>
-                        Add
-                      </Button>
-                    </Stack>
-                  </Card>
-                </div>
-              ) : null}
-
-              {/* dodaj  */}
-
-              {/* kraj dodaj */}
-
+          <Stack spacing={2}>
+            {/* header sa tasterom samo i naslovom   */}
+            <Stack justifyContent="space-between">
               <Stack direction="row" alignItems="center" spacing={1}>
                 <Stack position="relative" zIndex="1">
                   <SearchIcon
@@ -180,412 +67,40 @@ function App() {
                   DOT Inspections In Last 7 Days
                 </Typography>
               </Stack>
-              <TableContainer
-                component={Paper}
+
+              <Button
                 sx={{
-                  height: "100%",
-                  // backgroundColor: "yellow",
-                  position: "relative",
+                  alignSelf: "end",
                 }}
+                variant="contained"
+                startIcon={<CreateIcon />}
+                onClick={() => setDialogOpen(true)}
               >
-                {loading ? (
-                  <div className="loader-overlay">
-                    <div className="loader"></div>
-                  </div>
-                ) : null}
-                <Table
-                //  size="small"
-                >
-                  {/* <caption>A basic table example with a caption</caption> */}
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="center" sx={tableHeaderStyle}>
-                        Truck ID
-                      </TableCell>
-                      <TableCell sx={tableHeaderStyle}>DOT date</TableCell>
-                      <TableCell sx={tableHeaderStyle}>
-                        Do NOT edit logs (from - to)
-                      </TableCell>
-                      <TableCell sx={tableHeaderStyle}>CAN edit logs</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody
-                    sx={
-                      {
-                        // height: "100%",
-                        // backgroundColor: "red",
-                      }
-                    }
-                  >
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-
-                    <TableRow>
-                      <TableCell align="center">
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <LocalShippingIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            304
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <CalendarMonthIcon />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventBusyIcon color="warning" />
-                          <Typography variant="p" fontWeight="bold">
-                            {/* 09.12.2023 - Today */}
-                            07.12.2023 - 09.12.2023
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack
-                          direction="row"
-                          spacing={0.5}
-                          alignItems="center"
-                        >
-                          <EventAvailableIcon color="success" />
-                          <Typography variant="p" fontWeight="bold">
-                            09.12.2023 - Today
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                New DOT
+              </Button>
             </Stack>
-          </Card>
-        </Card>
+
+            <NewDOTForm
+              open={dialogOpen}
+              onClose={() => setDialogOpen(false)}
+              handleAddDotRecord={handleAddDotRecord}
+            />
+
+            <Stack
+              sx={{
+                position: "relative",
+                minHeight: "285px",
+              }}
+            >
+              {loading ? (
+                <div className="loader-overlay">
+                  <div className="loader"></div>
+                </div>
+              ) : null}
+              <DOTTable dotRecords={dotRecords} />
+            </Stack>
+          </Stack>
+        </Paper>
       </div>
     </LocalizationProvider>
   );

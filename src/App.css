@@ -1,16 +1,10 @@
 .App {
 height: 100vh;
-/* height: 100dvh; */
-/* max-height: 100vh; */
-/* background-color: #33  3; */
 background-color: rgb(135, 135, 135);
 display: grid;
-/* place-content: center; */
-/* align-content: center; */
 justify-content: center;
 padding: 2rem;
-/* margin: 2rem; */
-
+box-sizing: border-box;
 }
 
 
@@ -18,12 +12,10 @@ padding: 2rem;
   position: absolute;
   inset: 0;
   margin: 0 !important;
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(135, 135, 135, .85);
 z-index: 5;
   display: grid;
   place-content: center;
-
-  /* display: none;   */
 }
 
 .loader-overlay {
@@ -32,8 +24,6 @@ z-index: 5;
   display: grid;
   place-content: center;
   background-color: rgba(255, 255, 255, 0.85);
-
-  /* display: none; */
 }
 
 .loader {
