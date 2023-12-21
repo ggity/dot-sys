@@ -1,11 +1,13 @@
 import { v4 as uuid } from "uuid";
 
 import {
+  Alert,
   Button,
   Card,
   Divider,
   IconButton,
   InputAdornment,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -16,9 +18,9 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-const NewDOTForm = ({ open, onClose, handleAddDotRecord }) => {
+const NewDOTForm = ({ open, onClose, refresh, onSuccess, onError }) => {
   const [truckId, setTruckId] = useState("");
   const [dotDate, setDotDate] = useState(dayjs(Date.now()));
 
@@ -30,19 +32,15 @@ const NewDOTForm = ({ open, onClose, handleAddDotRecord }) => {
     return;
   };
 
-  // const addDotRecord = () => {
-  // }
-    
-
-const handleAddNewDotRecord = async (record) => {
-  await fetch("http://192.168.0.61:3000/dots", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(record)
-  });
-};
+  const postData = async (record) => {
+    await fetch("http://localhost:3000/dots", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(record),
+    });
+  };
 
   return open ? (
     <div className="overlay">
@@ -96,10 +94,8 @@ const handleAddNewDotRecord = async (record) => {
               }}
             />
             <DatePicker
-              //   value={dayjs(Date.now())}
               value={dayjs(dotDate)}
               maxDate={dayjs(Date.now())}
-              //   views={["day"]}
               onChange={(newDate) => setDotDate(newDate)}
               size="small"
               label="DOT date"
@@ -122,20 +118,17 @@ const handleAddNewDotRecord = async (record) => {
             <Button
               disabled={!truckId}
               onClick={async () => {
-                // pokrece loader
-              const  newRecord = {
-                 id: uuid(),
+                const newRecord = {
+                  id: uuid(),
                   truckId,
                   dotDate: dotDate.toJSON(),
                 };
-                await handleAddNewDotRecord(newRecord);
-                // kada uradi ovo, gasi loader 
-                // dodaje dot...
-
-                handleAddDotRecord(newRecord);
+                await postData(newRecord);
+                refresh();
                 setTruckId("");
                 setDotDate(dayjs(Date.now()));
                 onClose();
+                onSuccess(`Successfuly added DOT record for ${truckId}`);
               }}
               variant="contained"
               startIcon={<AddCircleIcon />}

@@ -1,5 +1,4 @@
 import {
-  Paper,
   Stack,
   Table,
   TableBody,
@@ -16,23 +15,47 @@ import EventBusyIcon from "@mui/icons-material/EventBusy";
 import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 
 import dayjs from "dayjs";
+import Loader from "./Loader";
+import TableEmpty from "./TableEmpty";
 
 const tableHeaderStyle = {
-  backgroundColor: "primary.main",
+  backgroundColor: "lightgray",
+  // borderInline: "1px solid black",
   fontWeight: "bold",
-  color: "white",
+  // color: "white",
 };
 
 const DOTTable = ({ dotRecords = [], loading }) => {
-  console.log("iz tabelem pricam");
-  console.log(dotRecords);
   return (
-    <Stack>
+    <Stack
+      sx={{
+        position: "relative",
+        minHeight: "285px",
+      }}
+    >
+      {loading ? <Loader /> : null}
+      {!loading && dotRecords.length === 0 ? <TableEmpty /> : null}
       <TableContainer>
-        <Table
-        //  size="small"
-        >
-          {/* <caption>A basic table example with a caption</caption> */}
+        <Table>
+          {dotRecords.length !== 0 ? (
+            <caption>
+              <Stack spacing={1}>
+                <Typography>Legend:</Typography>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <EventBusyIcon color="warning" />
+                  <Typography variant="p" fontWeight="bold">
+                    - Can't edit logs from date to date
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={0.5} alignItems="center">
+                  <EventAvailableIcon color="success" />
+                  <Typography variant="p" fontWeight="bold">
+                    - Can edit logs from date do today
+                  </Typography>
+                </Stack>
+              </Stack>
+            </caption>
+          ) : null}
           <TableHead>
             <TableRow>
               <TableCell align="center" sx={tableHeaderStyle}>
@@ -43,19 +66,13 @@ const DOTTable = ({ dotRecords = [], loading }) => {
               <TableCell sx={tableHeaderStyle}>CAN edit logs</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody
-            sx={{
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            {!loading && dotRecords.length < 1 ? (
-              <div className="loader-overlay">d</div>
-            ) : null}
+          <TableBody>
             {dotRecords.map((record) => {
               return (
                 <TableRow>
-                  <TableCell align="center">
+                  <TableCell
+                  // align="center"
+                  >
                     <Stack
                       direction="row"
                       spacing={1}
@@ -80,8 +97,8 @@ const DOTTable = ({ dotRecords = [], loading }) => {
                     <Stack direction="row" spacing={0.5} alignItems="center">
                       <EventBusyIcon color="warning" />
                       <Typography variant="p" fontWeight="bold">
-                        {dayjs(Date.now()).subtract(7, "d").format("DD.MM")}-{" "}
-                        {dayjs(record.dotDate).format("DD.MM")}
+                        {dayjs(Date.now()).subtract(7, "d").format("DD.MM.YY")}-{" "}
+                        {dayjs(record.dotDate).format("DD.MM.YY")}
                       </Typography>
                     </Stack>
                   </TableCell>
@@ -89,7 +106,7 @@ const DOTTable = ({ dotRecords = [], loading }) => {
                     <Stack direction="row" spacing={0.5} alignItems="center">
                       <EventAvailableIcon color="success" />
                       <Typography variant="p" fontWeight="bold">
-                        {dayjs(record.dotDate).format("DD.MM")} - Today
+                        {dayjs(record.dotDate).format("DD.MM.YY")} - Today
                       </Typography>
                     </Stack>
                   </TableCell>

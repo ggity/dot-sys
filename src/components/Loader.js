@@ -1,15 +1,12 @@
+import { CircularProgress, LinearProgress } from "@mui/material";
 
-const Loader = ({
-    loading = false,
-}) => {
+const Loader = () => {
   return (
-    loading ? (
     <div className="loader-overlay">
-      <div className="loader"></div>
+      <CircularProgress />
+      {/* <LinearProgress /> */}
     </div>
-    ) :
-    null
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;

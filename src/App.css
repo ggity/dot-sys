@@ -1,9 +1,10 @@
 .App {
 height: 100vh;
-background-color: rgb(135, 135, 135);
+background-color: rgba(135, 135, 135, .75);
 display: grid;
 justify-content: center;
 padding: 2rem;
+padding-block: 5rem;
 box-sizing: border-box;
 }
 
