@@ -1,22 +1,11 @@
 .App {
 height: 100vh;
-background-color: rgba(135, 135, 135, .75);
+background-color: rgba(135, 135, 135, .35);
 display: grid;
 justify-content: center;
 padding: 2rem;
 padding-block: 5rem;
 box-sizing: border-box;
-}
-
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  margin: 0 !important;
-  background-color: rgba(135, 135, 135, .9);
-z-index: 5;
-  display: grid;
-  place-content: center;
 }
 
 .loader-overlay {
@@ -25,27 +14,4 @@ z-index: 5;
   display: grid;
   place-content: center;
   background-color: rgba(255, 255, 255, 0.85);
-}
-
-.loader {
-  --loader-size: 2rem;
-  width: var(--loader-size);
-  height: var(--loader-size);
-  border-radius: 50%;
-  border: 5px solid #1565c0;
-  border-bottom: 5px solid transparent;
-  border-top: 5px solid transparent;
-
-  animation-name: rotate;
-  animation-duration: 1s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

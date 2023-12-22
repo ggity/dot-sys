@@ -19,10 +19,8 @@ import Loader from "./Loader";
 import TableEmpty from "./TableEmpty";
 
 const tableHeaderStyle = {
-  backgroundColor: "lightgray",
-  // borderInline: "1px solid black",
+  // backgroundColor: "primary.main",
   fontWeight: "bold",
-  // color: "white",
 };
 
 const DOTTable = ({ dotRecords = [], loading }) => {
@@ -80,7 +78,7 @@ const DOTTable = ({ dotRecords = [], loading }) => {
                       justifyContent="center"
                     >
                       <LocalShippingIcon />
-                      <Typography variant="p" fontWeight="bold">
+                      <Typography variant="p" fontWeight="bold" color="gray">
                         {record.truckId}
                       </Typography>
                     </Stack>
@@ -88,7 +86,7 @@ const DOTTable = ({ dotRecords = [], loading }) => {
                   <TableCell>
                     <Stack direction="row" spacing={0.5} alignItems="center">
                       <CalendarMonthIcon />
-                      <Typography variant="p" fontWeight="bold">
+                      <Typography variant="p" fontWeight="bold" color="gray">
                         {dayjs(record.dotDate).format("DD.MM.YYYY")}
                       </Typography>
                     </Stack>
@@ -96,16 +94,16 @@ const DOTTable = ({ dotRecords = [], loading }) => {
                   <TableCell>
                     <Stack direction="row" spacing={0.5} alignItems="center">
                       <EventBusyIcon color="warning" />
-                      <Typography variant="p" fontWeight="bold">
-                        {dayjs(Date.now()).subtract(7, "d").format("DD.MM.YY")}-{" "}
-                        {dayjs(record.dotDate).format("DD.MM.YY")}
+                      <Typography variant="p" fontWeight="bold" color="gray">
+                        {dayjs(Date.now()).subtract(7, "d").format("DD.MM.YY")}{" "}
+                        - {dayjs(record.dotDate).format("DD.MM.YY")}
                       </Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={0.5} alignItems="center">
                       <EventAvailableIcon color="success" />
-                      <Typography variant="p" fontWeight="bold">
+                      <Typography variant="p" fontWeight="bold" color="gray">
                         {dayjs(record.dotDate).format("DD.MM.YY")} - Today
                       </Typography>
                     </Stack>
